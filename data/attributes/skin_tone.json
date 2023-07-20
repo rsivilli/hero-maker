@@ -1,0 +1,35 @@
+{
+    "label":"Skin Tone",
+    "choices": [
+        "ivory",
+        "beige",
+        "alabaster",
+        "honey",
+        "carotenoid",
+        "tan",
+        "caramel",
+        "bronze",
+        "mahogany",
+        "chestnut",
+        "buff",
+        "peaches and cream",
+        "umber",
+        "praline",
+        "espresso brown",
+        "porcelain",
+        "hickory",
+        "mustard",
+        "sable",
+        "almond",
+        "bisque",
+        "teak",
+        "cacao",
+        "pecan",
+        "saddle brown"   
+    ],
+    "interactive":true,
+    "multiselect":false,
+    "allow_custom_value":true,
+    "format_string":"({} skin tone:{})"
+
+}

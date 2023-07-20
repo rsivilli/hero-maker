@@ -1,0 +1,12 @@
+{
+    "label":"World Setting",
+    "choices":[
+        "fantasy",
+        "science ficiton"
+    ],
+    "interactive":true,
+    "multiselect":false,
+    "allow_custom_value":true,
+    "format_string":"({} setting:{})"
+
+}

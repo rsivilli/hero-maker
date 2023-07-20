@@ -1,0 +1,16 @@
+{
+    "label":"Clothing",
+    "choices": [
+        "leather armor",
+        "platemail armor",
+        "long coat",
+        "flowing robes"
+
+
+    ],
+    "interactive":true,
+    "multiselect":false,
+    "allow_custom_value":true,
+    "format_string":"(wearing {}:{})"
+
+}

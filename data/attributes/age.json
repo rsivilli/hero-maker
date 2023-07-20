@@ -1,0 +1,16 @@
+{
+    "label":"Age",
+    "choices":[
+        "young-adult",
+        "adult",
+        "middle-aged",
+        "senior",
+        "elderly",
+        "venerable"
+    
+    ],
+    "interactive":true,
+    "multiselect":false,
+    "allow_custom_value":true
+
+}
