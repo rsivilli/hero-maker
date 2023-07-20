@@ -112,7 +112,7 @@ def get_face_single(img_data, face_index=0, det_size=(640, 640)):
 
 
 def swap_face(
-    source_img: Image, target_img: Image, model: str = "../models/inswapper_128.onnx", faces_index: List[int] = [0], upscale_options: UpscaleOptions = None
+    source_img: Image, target_img: Image, model: str = "../../models/inswapper_128.onnx", faces_index: List[int] = [0], upscale_options: UpscaleOptions = None
 ) -> Image:
     if(post_process(target_img) is None) :
         return target_img
@@ -136,7 +136,7 @@ def swap_face(
 
         result_image = Image.fromarray(cv2.cvtColor(result, cv2.COLOR_BGR2RGB))
 
-        result_image = upscale_image(result_image, upscale_options)
+        # result_image = upscale_image(result_image, upscale_options)
     
         return post_process(result_image) or target_img
     else:

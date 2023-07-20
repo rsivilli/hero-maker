@@ -6,6 +6,7 @@ from scripts.hm_lib.gui_config import (
 )
 from modules.sd_samplers import samplers
 from scripts.hm_lib.tools import create_character_string,generate_images
+from scripts.hm_lib.swapper import swap_face
 import gradio as gr
 import numpy as np
 from pathlib import Path
@@ -37,7 +38,14 @@ def on_select_base_character(evt: gr.SelectData):  # SelectData is a subclass of
 def get_select_index(evt: gr.SelectData):
         return evt.index
 
-
+def swap_faces(character_images, character_choice, person_image,faces_index=[] ):
+        if len(faces_index) == 0 :
+            faces_index = [0]
+        return swap_face(person_image, 
+                  character_images[int(character_choice)], 
+                  faces_index = faces_index,
+        )   
+        
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as hero_maker:
 
@@ -82,7 +90,6 @@ def on_ui_tabs():
 
         base_character_images.select(get_select_index,None,selected)
         
-
         character_button = gr.Button("Create Character")
         character_button.click(
             generate_prompt_and_image, inputs=[
@@ -97,8 +104,31 @@ def on_ui_tabs():
 
 
         )
-        person_image = gr.Image(source="webcam")
+
+
         
+        person_image = gr.Image(source="webcam")
+
+        
+        
+        person_character_fuse_button = gr.Button("Fuse Character")
+
+        final_product = gr.Image()
+
+        person_character_fuse_button.click(
+            swap_faces,inputs = [
+                 base_character_state,
+                 selected,
+                 person_image
+
+
+                 
+            ],outputs=[final_product]
+        )
+
+        
+
+
         
     statement = gr.Textbox()
         
