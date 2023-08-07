@@ -18,12 +18,12 @@ Focused around creating a guided prompt based on D&D terms used in character cre
 
 ## TODO
 
-[ ] Implement sfw filter for checking images before faceswap
-[ ] Toggle for sfw slider for adjusting the filter
-[ ] Improve UX
-[ ] Add ability to switch between webcam and existing images
-[ ] Test different models and document performance/utility for different character settings
-[ ] Implement stats influence the prompt
+- [ ] Implement sfw filter for checking images before faceswap
+- [ ] Toggle for sfw slider for adjusting the filter
+- [ ] Improve UX
+- [ ] Add ability to switch between webcam and existing images
+- [ ] Test different models and document performance/utility for different character settings
+- [ ] Implement stats influence the prompt
 
 
 
