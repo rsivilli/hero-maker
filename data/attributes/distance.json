@@ -1,0 +1,14 @@
+{
+    "label":"Distance",
+    "choices":{
+        "Close up":"close-up head, facing camera",
+        "Medium Range":"full body, walking pose, slow-motion",
+        "Full Body":": A (full body:1.3) shot at 8k resolution, splash art, fantastic comic book style"
+
+    }
+    ,
+    "interactive":true,
+    "multiselect":false,
+    "allow_custom_value":false
+
+}

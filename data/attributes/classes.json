@@ -4,7 +4,7 @@
         "Barbarian":"A fierce warrior of primitive background who can enter a battle rage",
         "Bard":"An inspiring magician whose power echoes the music of creation",
         "Cleric":"A priestly champion who wields divine magic in service of a higher power",
-        "Druid":"A priest of the Old Faith, wielding the powers of nature — moonlight and plant growth, fire and lightning — and adopting animal forms",
+        "Druid":"a druid",
         "Fighter":"A master of martial combat, skilled with a variety of weapons and armor",
         "Monk":"A master of martial arts, harnessing the power of the body in pursuit of physical and spiritual perfection",
         "Paladin":"A holy warrior bound to a sacred oath",
@@ -12,7 +12,9 @@
         "Rogue":"A scoundrel who uses stealth and trickery to overcome obstacles and enemies",
         "Sorcerer":"A spellcaster who draws on inherent magic from a gift or bloodline",
         "Warlock":"A wielder of magic that is derived from a bargain with an extraplanar entity",
-        "Wizard":"A scholarly magic-user capable of manipulating the structures of reality"
+        "Wizard":"A scholarly magic-user capable of manipulating the structures of reality",
+        "Pirate":"A pirate",
+        "Necromancer":"A necromancer"
     
     },
     "interactive":true,

@@ -1,0 +1,13 @@
+{
+    "label":"Pose",
+    "choices":[
+        "action shot",
+    "standing shot",
+    "casual"
+],
+    "info":"The general attitude of the picture",
+    "interactive":true,
+    "multiselect":false,
+    "allow_custom_value":true
+
+}
