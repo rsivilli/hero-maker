@@ -70,7 +70,12 @@ def generate_images(prompt_string, sampler, steps, batch_size, n_iter):
         outpath_grids=opts.outdir_grids or opts.outdir_txt2img_grids,
         prompt=prompt_string,
         # styles=prompt_styles,
-        negative_prompt="easynegative, too many fingers, missing head, head cut out, logo, watermark",
+        negative_prompt= """
+        nude, (bad art, low detail, pencil drawing:1.4), (plain background, grainy, low quality, 
+        mutated hands and fingers:1.4), (watermark, thin lines:1.2), (deformed, signature:1.2), (blurry, ugly, bad anatomy, 
+        extra limbs, undersaturated, low resolution), disfigured, deformations, out of frame, amputee, bad proportions, 
+        extra limb, missing limbs, distortion, floating limbs, out of frame, poorly drawn face, poorly drawn hands, text, malformed, missing fingers, cropped
+        """,
         # seed=seed,
         sampler_name=sampler,
         batch_size=batch_size,

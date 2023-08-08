@@ -1,4 +1,5 @@
 from modules import script_callbacks
+
 from scripts.hm_lib.gui_config import (
     stat_config,
     load_character_attributes
@@ -8,26 +9,17 @@ from modules.sd_samplers import samplers
 from scripts.hm_lib.tools import create_character_string,generate_images
 from scripts.hm_lib.swapper import swap_face
 import gradio as gr
-import numpy as np
 from pathlib import Path
 
 import modules.scripts as scripts
-from gradio.outputs import Carousel
 
 
-
-
-
-
-
-def flip_image(x):
-    
-    return np.fliplr(x)
-
-def get_weight_default():
+def get_weight_default()->int:
+    """Required due to weird behavior with sliders"""
     return 1
 
-def generate_prompt_and_image(sampler, steps, batch_size, n_iter,*args):
+def generate_prompt_and_image(sampler, steps, batch_size, n_iter,*args)->tuple[str,list, list]:
+    """Entrypoint from gui for creating prompt and images"""
     prompt_string = create_character_string(*args)
     images= generate_images(prompt_string=prompt_string, sampler=sampler,steps=steps,batch_size=batch_size,n_iter=n_iter)
     return prompt_string,images,images
@@ -84,13 +76,14 @@ def on_ui_tabs():
             batch_count = gr.Slider(minimum=1,maximum=100, step = 1, label="Batch Count",value = 1,interactive= True)
            
         string_output = gr.Text()
+        character_button = gr.Button("Create Character")
         base_character_images = gr.Gallery(preview=True, variant='panel')
         base_character_state = gr.State()
-        selected = gr.Number(show_label=False, placeholder="Selected")
+        selected = gr.Number(show_label=False, placeholder="Selected",visible=False)
 
         base_character_images.select(get_select_index,None,selected)
         
-        character_button = gr.Button("Create Character")
+        
         character_button.click(
             generate_prompt_and_image, inputs=[
                 sampler,

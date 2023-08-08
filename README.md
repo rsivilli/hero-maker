@@ -6,8 +6,10 @@ Just a fun proof of concept automatic1111 plugin for guided prompt generation an
 Focused around creating a guided prompt based on D&D terms used in character creation.
 
 ## Installation
-1. Use automatic1111's "Install from ULR tab"
+1. Install extension by going to Extensions tab -> Install from URL -> Paste github URL and click Install.
 2. In the install directory for the plugin (typically under extensions/hero-maker) create a models folder and add [this](https://huggingface.co/deepinsight/inswapper/blob/main/inswapper_128.onnx) model with the name "inswapper_128.onnx"
+3. After it's installed, go back to the Installed tab in Extensions and press Apply and restart UI.
+
 
 
 

@@ -1,13 +1,13 @@
+"""
+Installation based heavily off atomatic1111's suggestions https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Developing-extensions
+"""
+
 import launch
 import os
 import pkg_resources
 import sys
-import traceback
 
 req_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "requirements.txt")
-
-import os
-
 models_dir = os.path.abspath('models/HeroMaker')
 
 if not os.path.exists(models_dir):
