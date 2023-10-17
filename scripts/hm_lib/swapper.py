@@ -1,29 +1,33 @@
-from dataclasses import dataclass
+import copy
 import os
-from typing import List
+from dataclasses import dataclass
+from typing import List, Tuple
+
 import cv2
 import insightface
-import onnxruntime
+from insightface.app import FaceAnalysis
 import numpy as np
-import opennsfw2 as n2
+import onnxruntime
 
-from PIL import Image, ImageFont, ImageDraw, PngImagePlugin
+# import opennsfw2 as n2
+# import tensorflow as tf
+# from imwatermark import WatermarkDecoder, WatermarkEncoder
+# from modules import images, scripts, scripts_postprocessing, shared
+from modules.face_restoration import FaceRestoration  # , restore_faces
+from modules.upscaler import UpscalerData  # , Upscaler
+from PIL import Image  # , ImageDraw, ImageFont, PngImagePlugin
+
 from scripts.hm_lib.logger import logger
-from modules.upscaler import Upscaler, UpscalerData
-from modules.face_restoration import restore_faces
-from modules import scripts, shared, images,  scripts_postprocessing
-from modules.face_restoration import FaceRestoration
-import copy
-from imwatermark import WatermarkEncoder, WatermarkDecoder
-import tensorflow as tf
+
 
 @dataclass
-class UpscaleOptions :
-    scale : int = 1
-    upscaler : UpscalerData = None
-    upscale_visibility : float = 0.5
-    face_restorer : FaceRestoration  = None
-    restorer_visibility : float = 0.5
+class UpscaleOptions:
+    scale: int = 1
+    upscaler: UpscalerData = None
+    upscale_visibility: float = 0.5
+    face_restorer: FaceRestoration = None
+    restorer_visibility: float = 0.5
+
 
 # def enhanced(img, wm_encoder=None):
 #     wm_encoder = WatermarkEncoder()
@@ -44,26 +48,37 @@ class UpscaleOptions :
 #         dec = None
 #     return dec
 
-def post_process(target_img: Image) :
-   
+
+def post_process(target_img: Image):
     return target_img
+
 
 def upscale_image(image: Image, upscale_options: UpscaleOptions):
     result_image = image
-    if(upscale_options.upscaler is not None and upscale_options.upscaler.name != "None") :
+    if upscale_options.upscaler is not None and upscale_options.upscaler.name != "None":
         original_image = result_image.copy()
-        logger.info("Upscale with %s scale = %s", upscale_options.upscaler.name, upscale_options.scale)
-        result_image = upscale_options.upscaler.scaler.upscale(image, upscale_options.scale, upscale_options.upscaler.data_path)
-        if upscale_options.scale == 1 :
-            result_image = Image.blend(original_image, result_image, upscale_options.upscale_visibility)
+        logger.info(
+            "Upscale with %s scale = %s",
+            upscale_options.upscaler.name,
+            upscale_options.scale,
+        )
+        result_image = upscale_options.upscaler.scaler.upscale(
+            image, upscale_options.scale, upscale_options.upscaler.data_path
+        )
+        if upscale_options.scale == 1:
+            result_image = Image.blend(
+                original_image, result_image, upscale_options.upscale_visibility
+            )
 
-    if(upscale_options.face_restorer is not None) :
+    if upscale_options.face_restorer is not None:
         original_image = result_image.copy()
         logger.info("Restore face with %s", upscale_options.face_restorer.name())
         numpy_image = np.array(result_image)
         numpy_image = upscale_options.face_restorer.restore(numpy_image)
         restored_image = Image.fromarray(numpy_image)
-        result_image = Image.blend(original_image, restored_image, upscale_options.restorer_visibility)
+        result_image = Image.blend(
+            original_image, restored_image, upscale_options.restorer_visibility
+        )
 
     return post_process(result_image) or image
 
@@ -74,49 +89,59 @@ if "TensorrtExecutionProvider" in providers:
 
 ANALYSIS_MODEL = None
 
-def getAnalysisModel() :
+
+def getAnalysisModel() -> FaceAnalysis:
     global ANALYSIS_MODEL
-    if ANALYSIS_MODEL is None :
-        ANALYSIS_MODEL = insightface.app.FaceAnalysis(name="buffalo_l", providers=providers)
+    if ANALYSIS_MODEL is None:
+        ANALYSIS_MODEL = insightface.app.FaceAnalysis(
+            name="buffalo_l", providers=providers
+        )
     return ANALYSIS_MODEL
+
 
 FS_MODEL = None
 CURRENT_FS_MODEL_PATH = None
-def getFaceSwapModel(model_path : str) :
+
+
+def getFaceSwapModel(model_path: str):
     global FS_MODEL
     global CURRENT_FS_MODEL_PATH
     if CURRENT_FS_MODEL_PATH is None or CURRENT_FS_MODEL_PATH != model_path:
         CURRENT_FS_MODEL_PATH = model_path
-        FS_MODEL= insightface.model_zoo.get_model(
-            model_path, providers=providers
-        )
+        FS_MODEL = insightface.model_zoo.get_model(model_path, providers=providers)
 
     return FS_MODEL
 
 
-def get_face_single(img_data, face_index=0, det_size=(640, 640)):
+def get_face_single(
+    img_data: np.ndarray,
+    face_index: int = 0,
+    det_size: Tuple[int, int] = (640, 640),
+):
     face_analyser = copy.deepcopy(getAnalysisModel())
     face_analyser.prepare(ctx_id=0, det_size=det_size)
     face = face_analyser.get(img_data)
-    
+
     if len(face) == 0 and det_size[0] > 320 and det_size[1] > 320:
         det_size_half = (det_size[0] // 2, det_size[1] // 2)
         return get_face_single(img_data, face_index=face_index, det_size=det_size_half)
-    
+
     try:
         return sorted(face, key=lambda x: x.bbox[0])[face_index]
     except IndexError:
         return None
 
 
-
-
 def swap_face(
-    source_img: Image, target_img: Image, model: str = "../../models/inswapper_128.onnx", faces_index: List[int] = [0], upscale_options: UpscaleOptions = None
-) -> Image:
-    if(post_process(target_img) is None) :
+    source_img: Image,
+    target_img: Image,
+    model: str = "../../models/inswapper_128.onnx",
+    faces_index: List[int] = [0],
+    upscale_options: UpscaleOptions = None,
+) -> Image | None:
+    if post_process(target_img) is None:
         return target_img
-    
+
     source_img = cv2.cvtColor(np.array(source_img), cv2.COLOR_RGB2BGR)
     target_img = cv2.cvtColor(np.array(target_img), cv2.COLOR_RGB2BGR)
     source_face = get_face_single(source_img, face_index=0)
@@ -137,7 +162,7 @@ def swap_face(
         result_image = Image.fromarray(cv2.cvtColor(result, cv2.COLOR_BGR2RGB))
 
         # result_image = upscale_image(result_image, upscale_options)
-    
+
         return post_process(result_image) or target_img
     else:
         logger.info(f"No source face found")
