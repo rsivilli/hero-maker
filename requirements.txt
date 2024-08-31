@@ -2,6 +2,6 @@ insightface==0.7.3
 onnx==1.14.0
 onnxruntime==1.15.0
 tensorflow==2.12.0
-opencv-python==4.7.0.72
+opencv-python==4.8.1.78
 opennsfw2==0.10.2
 invisible-watermark==0.1.5
